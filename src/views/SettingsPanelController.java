@@ -7,7 +7,10 @@ package views;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -19,9 +22,21 @@ public class SettingsPanelController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    @FXML private Button btnOk;
+    
+    private Stage primaryStage;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+    
+    @FXML private void okAction(){
+        primaryStage = (Stage)btnOk.getScene().getWindow();
+        primaryStage.close();
+    }
+    @FXML private void cancelAction(){
+        primaryStage = (Stage)btnOk.getScene().getWindow();
+        primaryStage.close();
+    }
     
 }
