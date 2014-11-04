@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * FXML Controller class
@@ -42,18 +43,32 @@ public class PrototypeStageController implements Initializable {
     @FXML Button btnElev1;
     @FXML Button btnElev2;
     @FXML Button control;
-    
-    @FXML public void settingsAction(ActionEvent event) throws IOException{
-        SettingsPanelController settingsPanel;
+    @FXML public void elevatorActionOne(ActionEvent event) throws IOException{
         final Stage dialog = new Stage();
-        Stage settingsStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
-        FXMLLoader loader = new FXMLLoader();
-        Parent root = loader.load(getClass().getResource("/views/SettingsPanel.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/views/ControlCabin.fxml"));
+
         dialog.setTitle("Settings");
         dialog.setResizable(false);
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("/css/picture/icon.png")));
+        Scene dialogScene = new Scene(root);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setScene(dialogScene);
+        dialog.setX(primaryStage.getX()-216);
+        dialog.setY(primaryStage.getY());
+        dialog.show();
+    }
+    @FXML public void settingsAction(ActionEvent event) throws IOException{
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
+        Parent root = FXMLLoader.load(getClass().getResource("/views/SettingsPanel.fxml"));
+        dialog.setTitle("Settings");
+        dialog.setResizable(false);
+        dialog.getIcons().add(new Image(getClass().getResourceAsStream("/css/picture/icon.png")));
+        dialog.initStyle(StageStyle.UTILITY);
         Scene dialogScene = new Scene(root);
         dialog.setScene(dialogScene);
         dialog.show();
