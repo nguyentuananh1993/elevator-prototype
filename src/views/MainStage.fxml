@@ -9,8 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="350.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="views.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.MainStageController">
    <children>
       <ImageView fx:id="logo" fitHeight="212.0" fitWidth="283.0" layoutX="48.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
          <image>

@@ -11,22 +11,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import views.MainStageController;
 
 /**
  *
  * @author misrc_000
  */
-public class JavaFXApplication3 extends Application {
+public class Main extends Application {
     
+    private MainStageController mainPanel;
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/views/FXML.fxml"));
-        
+        FXMLLoader mainLoader = new FXMLLoader();
+        Parent root = mainLoader.load(getClass().getResource("/views/MainStage.fxml"));
+
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.setTitle("Elevator's Prototype");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/css/picture/icon.png")));
-        
         stage.setScene(scene);
         stage.show();
     }

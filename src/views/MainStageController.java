@@ -5,24 +5,32 @@
  */
 package views;
 
+import fundamental.Global;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
  *
  * @author misrc_000
  */
-public class FXMLController implements Initializable {
+public class MainStageController implements Initializable {
 
     /**
      * Initializes the controller class.
@@ -33,7 +41,7 @@ public class FXMLController implements Initializable {
     @FXML private RadioButton random;
     @FXML private RadioButton control;
     @FXML private Label check;
-    
+    private Stage primaryStage;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ToggleGroup group = new ToggleGroup();
@@ -43,12 +51,13 @@ public class FXMLController implements Initializable {
         random.setToggleGroup(group);
         control.setToggleGroup(group);
     }    
-    
-    @FXML private void startAction(){
-        if(random.isSelected()){
-            check.setText("random");
-        }else{
-            check.setText("control");
-        }
+
+    @FXML private void startAction(ActionEvent event) throws IOException{
+        Global.isRandom = random.isSelected();
+        Parent root = FXMLLoader.load(getClass().getResource("/views/PrototypeStage.fxml"));
+        Scene scene = new Scene(root);
+        Stage stageApp = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stageApp.setScene(scene);
+        stageApp.show();
     }
 }
