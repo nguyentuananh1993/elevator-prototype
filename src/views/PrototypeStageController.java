@@ -49,8 +49,23 @@ public class PrototypeStageController implements Initializable {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
         Parent root = FXMLLoader.load(getClass().getResource("/views/ControlCabin.fxml"));
-
-        dialog.setTitle("Settings");
+        dialog.setTitle("Elevator 1");
+        dialog.setResizable(false);
+        dialog.getIcons().add(new Image(getClass().getResourceAsStream("/css/picture/icon.png")));
+        Scene dialogScene = new Scene(root);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setScene(dialogScene);
+        dialog.setX(primaryStage.getX()-216);
+        dialog.setY(primaryStage.getY());
+        dialog.show();
+    }
+        @FXML public void elevatorActionTwo(ActionEvent event) throws IOException{
+        final Stage dialog = new Stage();
+        Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner((Stage)((Node)event.getSource()).getScene().getWindow());
+        Parent root = FXMLLoader.load(getClass().getResource("/views/ControlCabin.fxml"));
+        dialog.setTitle("Elevator 2");
         dialog.setResizable(false);
         dialog.getIcons().add(new Image(getClass().getResourceAsStream("/css/picture/icon.png")));
         Scene dialogScene = new Scene(root);

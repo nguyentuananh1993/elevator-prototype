@@ -45,11 +45,12 @@ public class MainStageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ToggleGroup group = new ToggleGroup();
+        random.setToggleGroup(group);
+        control.setToggleGroup(group);
         logo.setImage(new Image("/css/picture/Octocat.png"));
         random.setSelected(true);
         // TODO
-        random.setToggleGroup(group);
-        control.setToggleGroup(group);
+        
     }    
 
     @FXML private void startAction(ActionEvent event) throws IOException{
