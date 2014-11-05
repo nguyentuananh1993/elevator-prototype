@@ -213,8 +213,8 @@
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" prefWidth="80.0" text="Control" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" onAction="#elevatorActionOne" prefWidth="80.0" text="Elev 2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" onAction="#settingsAction" prefWidth="80.0" text="Elev 1" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#elevatorActionTwo" prefWidth="80.0" text="Elev 2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#elevatorActionOne" prefWidth="80.0" text="Elev 1" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
             <Button mnemonicParsing="false" onAction="#settingsAction" prefWidth="80.0" text="Settings" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
          </children>
       </GridPane>

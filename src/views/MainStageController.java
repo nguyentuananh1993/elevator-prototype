@@ -40,7 +40,6 @@ public class MainStageController implements Initializable {
     @FXML private Button start;
     @FXML private RadioButton random;
     @FXML private RadioButton control;
-    @FXML private Label check;
     private Stage primaryStage;
     @Override
     public void initialize(URL url, ResourceBundle rb) {

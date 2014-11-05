@@ -42,6 +42,5 @@
             <RadioButton fx:id="control" mnemonicParsing="false" text="Control mode." GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
-      <Label fx:id="check" layoutX="161.0" layoutY="456.0" text="Label" />
    </children>
 </AnchorPane>
