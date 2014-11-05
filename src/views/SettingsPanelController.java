@@ -72,6 +72,7 @@ public class SettingsPanelController implements Initializable {
         Global.isActiveElevator1 = !elev1.isSelected();
         Global.isActiveElevator2 = !elev2.isSelected();
         Global.isRandom = isRandom.isSelected();
+        Global.prototypeStage.changeState();
         primaryStage.close();
     }
     @FXML private void cancelAction(){

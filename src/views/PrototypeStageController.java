@@ -5,6 +5,7 @@
  */
 package views;
 
+import fundamental.Global;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +38,8 @@ public class PrototypeStageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        
+        
     }    
     
     @FXML Button btnSettings;
@@ -87,5 +90,25 @@ public class PrototypeStageController implements Initializable {
         Scene dialogScene = new Scene(root);
         dialog.setScene(dialogScene);
         dialog.show();
+    }
+    public void deactiveElevator1(){
+        btnElev1.setDisable(true);
+    }
+    public void deactiveElevator2(){
+        btnElev2.setDisable(true);
+    }
+    public void activeElevator1(){
+        btnElev1.setDisable(false);
+    }
+    public void activeElevator2(){
+        btnElev2.setDisable(false);
+    }
+    public void changeState(){
+        if(Global.isActiveElevator1)
+            activeElevator1();
+        else deactiveElevator1();
+        if(Global.isActiveElevator2)
+            activeElevator2();
+        else deactiveElevator2();
     }
 }
