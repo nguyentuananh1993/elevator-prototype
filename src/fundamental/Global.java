@@ -5,6 +5,10 @@
  */
 package fundamental;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import views.PrototypeStageController;
+
 /**
  *
  * @author misrc_000
@@ -17,4 +21,9 @@ public class Global {
     public static Integer maxWeight = 10;
     public static Integer maxPeopleInFloor = 5;
     public static Integer personWeightAverange = 50;
+    public static Boolean moveUpElevator1 = false;
+    public static Boolean moveUpElevator2 = false;
+    public static double movingSpeed = 10;
+    
+    public static PrototypeStageController prototypeStage;
 }

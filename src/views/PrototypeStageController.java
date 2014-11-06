@@ -9,6 +9,8 @@ import fundamental.Global;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,11 +20,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sun.plugin.javascript.navig.Anchor;
 
 /**
  * FXML Controller class
@@ -31,21 +36,23 @@ import javafx.stage.StageStyle;
  */
 public class PrototypeStageController implements Initializable {
 
-    
+    private final DoubleProperty posY = new SimpleDoubleProperty();
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        
+        elevator1.yProperty().bind(posY);
         
     }    
-    
+    @FXML AnchorPane eleBackground;
     @FXML Button btnSettings;
     @FXML Button btnElev1;
     @FXML Button btnElev2;
     @FXML Button control;
+    @FXML ImageView elevator1;
+    @FXML ImageView elevator2;
     @FXML public void elevatorActionOne(ActionEvent event) throws IOException{
         final Stage dialog = new Stage();
         Stage primaryStage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -101,7 +108,7 @@ public class PrototypeStageController implements Initializable {
         btnElev1.setDisable(false);
     }
     public void activeElevator2(){
-        btnElev2.setDisable(false);
+        btnElev2.setDisable(false); 
     }
     public void changeState(){
         if(Global.isActiveElevator1)
@@ -111,4 +118,12 @@ public class PrototypeStageController implements Initializable {
             activeElevator2();
         else deactiveElevator2();
     }
+    @FXML private void moveUp(){
+        if(posY.get() < eleBackground.getHeight())
+            posY.set(posY.get()+10);
+    }
+    @FXML private void setValue(){
+        posY.setValue(10);
+    }
+    
 }
