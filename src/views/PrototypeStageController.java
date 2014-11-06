@@ -9,9 +9,13 @@ import fundamental.Global;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.animation.TimelineBuilder;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,6 +31,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import sun.plugin.javascript.navig.Anchor;
 
 /**
@@ -35,14 +40,18 @@ import sun.plugin.javascript.navig.Anchor;
  * @author misrc_000
  */
 public class PrototypeStageController implements Initializable {
-
+    private final int FLOOR_LENGTH = 80;
     private final DoubleProperty posY = new SimpleDoubleProperty();
+    private Double movingSpeed = 1.0;
+    private int i = 0;
+    private int tempFloorLen =0;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        posY.set(elevator1.getY());
         elevator1.yProperty().bind(posY);
         
     }    
@@ -118,12 +127,52 @@ public class PrototypeStageController implements Initializable {
             activeElevator2();
         else deactiveElevator2();
     }
-    @FXML private void moveUp(){
-        if(posY.get() < eleBackground.getHeight())
-            posY.set(posY.get()+10);
+    @FXML private void moveDown(){
+        movingSpeed= 1.0;
+        if(posY.get()+1 < FLOOR_LENGTH*6){
+            timeline.playFromStart();
+            Global.moveUpElevator1 = false;
+            tempFloorLen = 80;
+            
+        }
+    }
+       @FXML private void moveUp(){
+        movingSpeed= 1.0;
+        if(posY.get() - FLOOR_LENGTH >= 0){
+            timeline.playFromStart();
+            Global.moveUpElevator1 = true;
+            tempFloorLen = 80;
+            
+        }
     }
     @FXML private void setValue(){
-        posY.setValue(10);
+        posY.set(0.0);
     }
     
+    public void moveElevator1(int to){
+        
+    }
+    private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(final ActionEvent evt) {
+                        checkEndOfPulse(tempFloorLen);
+			double y = Global.moveUpElevator1 ? -movingSpeed : movingSpeed;
+                        posY.set(posY.get() + y);
+                        System.out.println(posY.getValue());
+		}
+	};
+    private final Timeline timeline = TimelineBuilder.create()
+			.keyFrames(new KeyFrame(new Duration(10.0), pulseEvent))
+			.cycleCount(Timeline.INDEFINITE).build();
+    
+    private void checkEndOfPulse(int n){
+        i++;
+        if(i==n){
+            timeline.stop();
+            i=0;
+            movingSpeed = 1.0;
+            System.out.println(posY.getValue());
+        }
+            
+    }
 }

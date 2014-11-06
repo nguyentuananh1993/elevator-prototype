@@ -2,3 +2,8 @@
     -fx-background-color: blue;
     
 }
+.background{
+	 -fx-background-image: url("picture/background/background_image.png");
+	-fx-background-repeat:repeat; 
+
+}

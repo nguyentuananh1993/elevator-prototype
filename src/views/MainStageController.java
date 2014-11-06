@@ -56,6 +56,7 @@ public class MainStageController implements Initializable {
         Parent root = loader.load();
         Global.prototypeStage = loader.getController();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         Stage stageApp = (Stage)((Node)event.getSource()).getScene().getWindow();
         stageApp.setScene(scene);
         stageApp.show();
