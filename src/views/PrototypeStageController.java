@@ -150,6 +150,39 @@ public class PrototypeStageController implements Initializable {
     }
     
     public void moveElevator1(int to){
+        double tempLen = 0;
+        switch(to){
+            case 1:
+                tempLen = 480.0;
+                break;
+            case 2:
+                tempLen = 400.0;
+                break;
+            case 3:
+                tempLen = 320.0;
+                break;
+            case 4:
+                tempLen = 240.0;
+                break;
+            case 5:
+                tempLen = 160.0;
+                break;
+            case 6:
+                tempLen = 80.0;
+                break;
+            case 7:
+                tempLen = 0.0;
+                break;
+        }
+        if(tempLen > posY.get()){
+            tempFloorLen = (int)(tempLen - posY.get());
+            Global.moveUpElevator1 = false;
+            timeline.playFromStart();
+        }else if((tempLen < posY.get())){
+            tempFloorLen = (int)(posY.get() - tempLen);
+            Global.moveUpElevator1 = true;
+            timeline.playFromStart();
+        }
         
     }
     private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
@@ -170,8 +203,6 @@ public class PrototypeStageController implements Initializable {
         if(i==n){
             timeline.stop();
             i=0;
-            movingSpeed = 1.0;
-            System.out.println(posY.getValue());
         }
             
     }

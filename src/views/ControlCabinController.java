@@ -36,26 +36,26 @@ public class ControlCabinController implements Initializable {
     @FXML private Button btnCloseDoor;
     @FXML private ImageView icon;
     @FXML private void oneAction(){
-        Global.prototypeStage.moveElevator1(6);
+        Global.prototypeStage.moveElevator1(1);
     }
  
     @FXML private void twoAction(){
-        Global.prototypeStage.moveElevator1(5);
-    }
-    @FXML private void threeAction(){
-        Global.prototypeStage.moveElevator1(4);
-    }
-    @FXML private void fourAction(){
-        Global.prototypeStage.moveElevator1(3);
-    }
-    @FXML private void fiveAction(){
         Global.prototypeStage.moveElevator1(2);
     }
+    @FXML private void threeAction(){
+        Global.prototypeStage.moveElevator1(3);
+    }
+    @FXML private void fourAction(){
+        Global.prototypeStage.moveElevator1(4);
+    }
+    @FXML private void fiveAction(){
+        Global.prototypeStage.moveElevator1(5);
+    }
     @FXML private void sixAction(){
-        Global.prototypeStage.moveElevator1(1);
+        Global.prototypeStage.moveElevator1(6);
     }
     @FXML private void sevenAction(){
-        Global.prototypeStage.moveElevator1(0);
+        Global.prototypeStage.moveElevator1(7);
     }
            
              
