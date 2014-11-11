@@ -5,8 +5,8 @@
  */
 package fundamental;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import java.util.ArrayList;
+import views.ControlCabinController;
 import views.PrototypeStageController;
 
 /**
@@ -25,5 +25,13 @@ public class Global {
     public static Boolean moveUpElevator2 = false;
     public static double movingSpeed = 10;
     
+    public static ArrayList<Integer> gotoElevator1 = new ArrayList<>();
+    public static ArrayList<Integer> gotoElevator2 = new ArrayList<>();;
+    
     public static PrototypeStageController prototypeStage;
+    public static ControlCabinController controlCabin1;
+    public static ControlCabinController controlCabin2;
+
+    
+    
 }

@@ -74,6 +74,18 @@
                   <Label layoutX="121.0" layoutY="518.0" text="Floor 1" AnchorPane.topAnchor="520.0" />
                   <Label layoutX="121.0" layoutY="438.0" text="Floor 2" AnchorPane.topAnchor="440.0" />
                   <Label layoutX="121.0" layoutY="349.0" text="Floor 3" AnchorPane.topAnchor="360.0" />
+                  <Button layoutX="201.0" layoutY="57.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="60.0" />
+                  <Button layoutX="201.0" layoutY="108.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="110.0" />
+                  <Button layoutX="201.0" layoutY="188.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="190.0" />
+                  <Button layoutX="201.0" layoutY="268.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="270.0" />
+                  <Button layoutX="200.0" layoutY="348.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="350.0" />
+                  <Button layoutX="200.0" layoutY="428.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="430.0" />
+                  <Button layoutX="200.0" layoutY="508.0" mnemonicParsing="false" text="^" AnchorPane.topAnchor="510.0" />
+                  <Button layoutX="200.0" layoutY="460.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="460.0" />
+                  <Button layoutX="200.0" layoutY="377.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="377.0" />
+                  <Button layoutX="201.0" layoutY="297.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="300.0" />
+                  <Button layoutX="201.0" layoutY="225.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="220.0" />
+                  <Button layoutX="201.0" layoutY="130.0" mnemonicParsing="false" rotate="180.0" text="^" AnchorPane.topAnchor="140.0" />
                </children>
             </AnchorPane>
             <GridPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0" GridPane.rowIndex="1">
