@@ -36,6 +36,7 @@ public class SettingsPanelController implements Initializable {
     @FXML private TextField maxWeight;
     @FXML private TextField maxPeople;
     @FXML private TextField personAverange;
+    @FXML private TextField speedOfElevator;
     private Stage primaryStage;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -57,6 +58,7 @@ public class SettingsPanelController implements Initializable {
         else elev2.setSelected(false);
         
 // set system info:
+        speedOfElevator.setText(Global.movingSpeed.toString());
         randomPerson.setText(Global.randomPersonInSecond.toString());
         maxWeight.setText(Global.maxWeight.toString());
         maxPeople.setText(Global.maxPeopleInFloor.toString());
@@ -72,6 +74,7 @@ public class SettingsPanelController implements Initializable {
         Global.isActiveElevator1 = !elev1.isSelected();
         Global.isActiveElevator2 = !elev2.isSelected();
         Global.isRandom = isRandom.isSelected();
+        Global.movingSpeed = Double.parseDouble(speedOfElevator.getText());
         Global.prototypeStage.changeState();
         primaryStage.close();
     }

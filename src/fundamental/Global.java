@@ -23,7 +23,7 @@ public class Global {
     public static Integer personWeightAverange = 50;
     public static Boolean moveUpElevator1 = false;
     public static Boolean moveUpElevator2 = false;
-    public static double movingSpeed = 10;
+    public static Double movingSpeed = 1.0;
     
     public static ArrayList<Integer> gotoElevator1 = new ArrayList<>();
     public static ArrayList<Integer> gotoElevator2 = new ArrayList<>();;
