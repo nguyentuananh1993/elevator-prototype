@@ -58,23 +58,23 @@ public class SettingsPanelController implements Initializable {
         else elev2.setSelected(false);
         
 // set system info:
-        speedOfElevator.setText(Global.movingSpeed.toString());
-        randomPerson.setText(Global.randomPersonInSecond.toString());
+        speedOfElevator.setText(Global.elevatorSpeed.toString());
+        randomPerson.setText(Global.randomPerson.toString());
         maxWeight.setText(Global.maxWeight.toString());
-        maxPeople.setText(Global.maxPeopleInFloor.toString());
-        personAverange.setText(Global.personWeightAverange.toString());
+        maxPeople.setText(Global.maxPeople.toString());
+        personAverange.setText(Global.personWeight.toString());
     }    
     
     @FXML private void okAction(){
         primaryStage = (Stage)btnOk.getScene().getWindow();
-        Global.randomPersonInSecond = Integer.parseInt(randomPerson.getText());
+        Global.randomPerson = Integer.parseInt(randomPerson.getText());
         Global.maxWeight = Integer.parseInt(maxWeight.getText());
-        Global.maxPeopleInFloor = Integer.parseInt(maxPeople.getText());
-        Global.personWeightAverange = Integer.parseInt(personAverange.getText());
+        Global.maxPeople = Integer.parseInt(maxPeople.getText());
+        Global.personWeight = Integer.parseInt(personAverange.getText());
         Global.isActiveElevator1 = !elev1.isSelected();
         Global.isActiveElevator2 = !elev2.isSelected();
         Global.isRandom = isRandom.isSelected();
-        Global.movingSpeed = Double.parseDouble(speedOfElevator.getText());
+        Global.elevatorSpeed = Double.parseDouble(speedOfElevator.getText());
         Global.prototypeStage.changeState();
         primaryStage.close();
     }

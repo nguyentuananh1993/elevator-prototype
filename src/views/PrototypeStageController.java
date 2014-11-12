@@ -32,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import models.FloorStatus;
 import sun.plugin.javascript.navig.Anchor;
 
 /**
@@ -47,17 +48,12 @@ public class PrototypeStageController implements Initializable {
     private Double mSpeed = 10.0;
     private int i = 0;  // counter of corrupt
     private int tempFloorLen = 0;
+    private double tempLen = 0;
+    private Timeline timeline;
 
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        posY.set(elevator1.getY());
-        elevator1.yProperty().bind(posY);
-
-    }
     @FXML
     AnchorPane eleBackground;
     @FXML
@@ -100,6 +96,13 @@ public class PrototypeStageController implements Initializable {
     Button btnDown6;
     @FXML
     Button btnDown7;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        posY.set(elevator1.getY());
+        elevator1.yProperty().bind(posY);
+    }
 
     @FXML
     public void elevatorActionOne(ActionEvent event) throws IOException {
@@ -169,34 +172,52 @@ public class PrototypeStageController implements Initializable {
     }
 
     @FXML
-    private void moveDown() {
+    public void moveDown() {
         movingSpeed = 1.0;
         if (posY.get() + 1 < FLOOR_LENGTH * 6) {
             timeline.playFromStart();
-            Global.moveUpElevator1 = false;
+            Global.elevatorUpWard1 = false;
             tempFloorLen = 80;
 
         }
     }
 
     @FXML
-    private void moveUp() {
+    public void moveUp() {
         movingSpeed = 1.0;
         if (posY.get() - FLOOR_LENGTH >= 0) {
             timeline.playFromStart();
-            Global.moveUpElevator1 = true;
+            Global.elevatorUpWard1 = true;
             tempFloorLen = 80;
 
         }
     }
 
     @FXML
-    private void setValue() {
+    public void setValue() {
         posY.set(0.0);
     }
 
-    public double floorLen(int i) {
-        switch (i) {
+    public int getFloorPosition(double len) {
+        if (len >= 480.0) {
+            return 1;
+        } else if (len >= 400.0) {
+            return 2;
+        } else if (len >= 320.0) {
+            return 3;
+        } else if (len >= 240.0) {
+            return 4;
+        } else if (len >= 160.0) {
+            return 5;
+        } else if (len >= 80.0) {
+            return 6;
+        } else {
+            return 7;
+        }
+    }
+
+    public double getFloorPosition(int to) {
+        switch (to) {
             case 1:
                 return 480.0;
             case 2:
@@ -216,55 +237,48 @@ public class PrototypeStageController implements Initializable {
     }
 
     public void moveElevator1(int to) {
-        double tempLen = 0;
-        timeline = TimelineBuilder.create()
-            .keyFrames(new KeyFrame(new Duration(11-Global.movingSpeed), pulseEvent))
-            .cycleCount(Timeline.INDEFINITE).build();
-        switch (to) {
-            case 1:
-                tempLen = 480.0;
-                break;
-            case 2:
-                tempLen = 400.0;
-                break;
-            case 3:
-                tempLen = 320.0;
-                break;
-            case 4:
-                tempLen = 240.0;
-                break;
-            case 5:
-                tempLen = 160.0;
-                break;
-            case 6:
-                tempLen = 80.0;
-                break;
-            case 7:
-                tempLen = 0.0;
-                break;
+        if (Global.isMoving1) {
+            Global.gotoElevator1.add(new FloorStatus(to, true));
+        } else {
+            timeline = new Timeline();
+            timeline = TimelineBuilder.create()
+                    .keyFrames(new KeyFrame(new Duration(11 - Global.elevatorSpeed), pulseEvent))
+                    .cycleCount(Timeline.INDEFINITE).build();
+            tempLen = getFloorPosition(to);
+            if (tempLen > posY.get()) {
+                tempFloorLen = (int) (tempLen - posY.get());
+                Global.elevatorUpWard1 = false;
+                timeline.playFromStart();
+            } else if ((tempLen < posY.get())) {
+                tempFloorLen = (int) (posY.get() - tempLen);
+                Global.elevatorUpWard1 = true;
+                timeline.playFromStart();
+            }
         }
-        if (tempLen > posY.get()) {
-            tempFloorLen = (int) (tempLen - posY.get());
-            Global.moveUpElevator1 = false;
-            timeline.playFromStart();
-        } else if ((tempLen < posY.get())) {
-            tempFloorLen = (int) (posY.get() - tempLen);
-            Global.moveUpElevator1 = true;
-            timeline.playFromStart();
-        }
-
     }
 
     private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
         @Override
         public void handle(final ActionEvent evt) {
-            checkEndOfPulse(tempFloorLen);
-            double y = Global.moveUpElevator1 ? -movingSpeed : movingSpeed;
-            posY.set(posY.get() + y);
-            System.out.println(posY.getValue());
+            //checkEndOfPulse(tempFloorLen);
+            if (posY.get() != tempLen) {
+                Global.isMoving1 = true;
+                double y = Global.elevatorUpWard1 ? -movingSpeed : movingSpeed;
+                posY.set(posY.get() + y);
+                System.out.println(posY.getValue());
+            } else {
+                timeline.stop();
+                Global.isMoving1 = false;
+                Global.controlCabin1.enableButton(getFloorPosition(tempLen));
+                if(!Global.gotoElevator1.isEmpty()){
+                    int tmp = Global.gotoElevator1.get(0).getFloor();
+                    Global.gotoElevator1.remove(0);
+                    moveElevator1(tmp);
+                }
+            }
+
         }
     };
-    private Timeline timeline;
 
     private void checkEndOfPulse(int n) {
         i++;
@@ -275,6 +289,7 @@ public class PrototypeStageController implements Initializable {
 
     }
 
+    @FXML
     public void disableOutsideButton(boolean up, int floor) {
         if (!up) {
             switch (floor) {
@@ -370,20 +385,24 @@ public class PrototypeStageController implements Initializable {
     @FXML
     void actionDown7() {
     }
-    
-    @FXML public void deactiveElevator1() {
+
+    @FXML
+    public void deactiveElevator1() {
         btnElev1.setDisable(true);
     }
 
-    @FXML public void deactiveElevator2() {
+    @FXML
+    public void deactiveElevator2() {
         btnElev2.setDisable(true);
     }
 
-    @FXML public void activeElevator1() {
+    @FXML
+    public void activeElevator1() {
         btnElev1.setDisable(false);
     }
 
-    @FXML public void activeElevator2() {
+    @FXML
+    public void activeElevator2() {
         btnElev2.setDisable(false);
     }
 
