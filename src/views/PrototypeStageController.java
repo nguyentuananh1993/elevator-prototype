@@ -176,7 +176,7 @@ public class PrototypeStageController implements Initializable {
         movingSpeed = 1.0;
         if (posY.get() + 1 < FLOOR_LENGTH * 6) {
             timeline.playFromStart();
-            Global.elevatorUpWard1 = false;
+            Global.elevatorUpward1 = false;
             tempFloorLen = 80;
 
         }
@@ -187,7 +187,7 @@ public class PrototypeStageController implements Initializable {
         movingSpeed = 1.0;
         if (posY.get() - FLOOR_LENGTH >= 0) {
             timeline.playFromStart();
-            Global.elevatorUpWard1 = true;
+            Global.elevatorUpward1 = true;
             tempFloorLen = 80;
 
         }
@@ -237,24 +237,52 @@ public class PrototypeStageController implements Initializable {
     }
 
     public void moveElevator1(int to) {
-        if (Global.isMoving1) {
-            Global.gotoElevator1.add(new FloorStatus(to, true));
+        if (to == getFloorPosition(tempLen)) {
+            Global.controlCabin1.enableButton(to);
         } else {
-            timeline = new Timeline();
-            timeline = TimelineBuilder.create()
-                    .keyFrames(new KeyFrame(new Duration(11 - Global.elevatorSpeed), pulseEvent))
-                    .cycleCount(Timeline.INDEFINITE).build();
-            tempLen = getFloorPosition(to);
-            if (tempLen > posY.get()) {
-                tempFloorLen = (int) (tempLen - posY.get());
-                Global.elevatorUpWard1 = false;
-                timeline.playFromStart();
-            } else if ((tempLen < posY.get())) {
-                tempFloorLen = (int) (posY.get() - tempLen);
-                Global.elevatorUpWard1 = true;
-                timeline.playFromStart();
+            if (Global.isMoving1) {
+                if (Global.elevatorUpward1) {
+                    if (posY.get() < getFloorPosition(to) && getFloorPosition(to) < tempLen) {
+                        if (Global.memoryFloor1 == 0) {
+                            Global.memoryFloor1 = getFloorPosition(tempLen);
+                            tempLen = getFloorPosition(to);
+                        } else {
+                            Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), true));
+                            tempLen = getFloorPosition(to);
+                        }
+                    }else
+                        Global.gotoElevator1.add(new FloorStatus(to, true));
+                } else {
+                    if (posY.get() > getFloorPosition(to) && getFloorPosition(to) > tempLen) {
+                        if (Global.memoryFloor1 == 0) {
+                            Global.memoryFloor1 = getFloorPosition(tempLen);
+                            tempLen = getFloorPosition(to);
+                        } else {
+                            Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), false));
+                            tempLen = getFloorPosition(to);
+                        }
+                    }else
+                        Global.gotoElevator1.add(new FloorStatus(to, false));
+                }
+                Global.gotoElevator1.add(new FloorStatus(to, true));
+            } else {
+                timeline = new Timeline();
+                timeline = TimelineBuilder.create()
+                        .keyFrames(new KeyFrame(new Duration(11 - Global.elevatorSpeed), pulseEvent))
+                        .cycleCount(Timeline.INDEFINITE).build();
+                tempLen = getFloorPosition(to);
+                if (tempLen > posY.get()) {
+                    tempFloorLen = (int) (tempLen - posY.get());
+                    Global.elevatorUpward1 = false;
+                    timeline.playFromStart();
+                } else if ((tempLen < posY.get())) {
+                    tempFloorLen = (int) (posY.get() - tempLen);
+                    Global.elevatorUpward1 = true;
+                    timeline.playFromStart();
+                }
             }
         }
+
     }
 
     private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
@@ -262,19 +290,20 @@ public class PrototypeStageController implements Initializable {
         public void handle(final ActionEvent evt) {
             //checkEndOfPulse(tempFloorLen);
             if (posY.get() != tempLen) {
+                double y;
                 Global.isMoving1 = true;
-                double y = Global.elevatorUpWard1 ? -movingSpeed : movingSpeed;
+                if (Math.abs(posY.get()-tempLen)<=30) {
+                    y = Global.elevatorUpward1 ? -movingSpeed / 4 : movingSpeed / 4;
+                } else if (Math.abs(posY.get()-tempLen)<=15) {
+                    y = Global.elevatorUpward1 ? -movingSpeed / 8 : movingSpeed / 8;
+                } else {
+                    y = Global.elevatorUpward1 ? -movingSpeed : movingSpeed;
+                }
                 posY.set(posY.get() + y);
                 System.out.println(posY.getValue());
             } else {
                 timeline.stop();
                 Global.isMoving1 = false;
-                Global.controlCabin1.enableButton(getFloorPosition(tempLen));
-                if(!Global.gotoElevator1.isEmpty()){
-                    int tmp = Global.gotoElevator1.get(0).getFloor();
-                    Global.gotoElevator1.remove(0);
-                    moveElevator1(tmp);
-                }
             }
 
         }

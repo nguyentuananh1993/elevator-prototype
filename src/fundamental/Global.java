@@ -22,14 +22,14 @@ public class Global {
     public static Integer maxWeight = 10;
     public static Integer maxPeople = 5;
     public static Integer personWeight = 50;
-    public static Boolean elevatorUpWard1 = false;
+    public static Boolean elevatorUpward1 = false;
     public static Boolean elevatorUpWard2 = false;
     public static Double elevatorSpeed = 1.0;
     public static Boolean isMoving1 = false;
     public static Boolean isMoving2 = false;
     public static double toFloor1 = 0; // position of elevator in realtime
-    public static int saveFloor1 = 0;// khi su ly di chuyen bi ngat quang boi 1 tang trung gian
-    public static int saveFloor2 = 0;
+    public static int memoryFloor1 = 0;// khi su ly di chuyen bi ngat quang boi 1 tang trung gian
+    public static int memoryFloor2 = 0;
     public static ArrayList<FloorStatus> gotoElevator1 = new ArrayList<>();
     public static ArrayList<FloorStatus> gotoElevator2 = new ArrayList<>();;
     
