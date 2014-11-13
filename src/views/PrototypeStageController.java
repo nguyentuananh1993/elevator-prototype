@@ -6,6 +6,7 @@
 package views;
 
 import fundamental.Global;
+import fundamental.Global.directionType;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -183,7 +184,7 @@ public class PrototypeStageController implements Initializable {
         movingSpeed = 1.0;
         if (posY.get() + 1 < FLOOR_LENGTH * 6) {
             timeline.playFromStart();
-            Global.elevatorUpward1 = false;
+            Global.direct1 = directionType.DOWN;
             tempFloorLen = 80;
 
         }
@@ -194,7 +195,7 @@ public class PrototypeStageController implements Initializable {
         movingSpeed = 1.0;
         if (posY.get() - FLOOR_LENGTH >= 0) {
             timeline.playFromStart();
-            Global.elevatorUpward1 = true;
+            Global.direct1 = directionType.UP;
             tempFloorLen = 80;
 
         }
@@ -242,49 +243,39 @@ public class PrototypeStageController implements Initializable {
         }
         return 0;
     }
-    public int memoryFloor(ArrayList<FloorStatus> a){
+
+    public int memoryFloor(ArrayList<FloorStatus> a) {
         int check = 0;
-        for(FloorStatus tmp: a)
-            if(tmp.getMemory())
+        for (FloorStatus tmp : a) {
+            if (tmp.getMemory()) {
                 check = tmp.getFloor();
-       return check;     
-    }
-    public void externalMovingAction(int to) {
-        if (Global.elevatorUpward1) {
-            if (posY.get() > getFloorPosition(to) && getFloorPosition(to) > tempLen) {
-                if (memoryFloor(Global.gotoElevator1) == 0) {
-                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen),true,true));
-                    tempLen = getFloorPosition(to);
-                } else {
-                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), true));
-                    tempLen = getFloorPosition(to);
-                }
-            } else {
-                Global.gotoElevator1.add(new FloorStatus(to, true));
-            }
-        } else {
-            if (posY.get() < getFloorPosition(to) && getFloorPosition(to) < tempLen) {
-                if (memoryFloor(Global.gotoElevator1) == 0) {
-                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen),false,true));
-                    tempLen = getFloorPosition(to);
-                } else {
-                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), false));
-                    tempLen = getFloorPosition(to);
-                }
-            } else {
-                Global.gotoElevator1.add(new FloorStatus(to, false));
             }
         }
-        Global.gotoElevator1.add(new FloorStatus(to, true));
-
+        return check;
     }
 
     public void moveElevator1(int to) {
         if (to == getFloorPosition(tempLen)) {
             Global.controlCabin1.enableButton(to);
         } else {
-            if (Global.isMoving1) {
-                externalMovingAction(to);
+            if (Global.direct1.equals(directionType.UP)) {
+                if (to < getFloorPosition(posY.get())) {
+                    Global.listDown1.add(to);
+                } else if (to > getFloorPosition(tempLen)) {
+                    Global.listUp1.add(to);
+                } else {
+                    Global.listUp1.add(getFloorPosition(tempLen));
+                    tempLen = getFloorPosition(to);
+                }
+            } else if (Global.direct1.equals(directionType.DOWN)) {
+                if (to > getFloorPosition(posY.get())) {
+                    Global.listUp1.add(to);
+                } else if (to < getFloorPosition(tempLen)) {
+                    Global.listDown1.add(to);
+                } else {
+                    Global.listDown1.add(getFloorPosition(tempLen));
+                    tempLen = getFloorPosition(to);
+                }
             } else {
                 timeline = new Timeline();
                 timeline = TimelineBuilder.create()
@@ -293,16 +284,15 @@ public class PrototypeStageController implements Initializable {
                 tempLen = getFloorPosition(to);
                 if (tempLen > posY.get()) {
                     tempFloorLen = (int) (tempLen - posY.get());
-                    Global.elevatorUpward1 = false;
+                    Global.direct1 = directionType.DOWN;
                     timeline.playFromStart();
                 } else if ((tempLen < posY.get())) {
                     tempFloorLen = (int) (posY.get() - tempLen);
-                    Global.elevatorUpward1 = true;
+                    Global.direct1 = directionType.UP;
                     timeline.playFromStart();
                 }
             }
         }
-
     }
 
     private final EventHandler<ActionEvent> pulseEvent = new EventHandler<ActionEvent>() {
@@ -311,45 +301,99 @@ public class PrototypeStageController implements Initializable {
             //if elevator still run
             if (posY.get() != tempLen) {
                 double y;
-                Global.isMoving1 = true;
                 if (Math.abs(posY.get() - tempLen) <= 30) {
-                    y = Global.elevatorUpward1 ? -movingSpeed / 4 : movingSpeed / 4;
+                    y = Global.direct1.equals(directionType.UP) ? -movingSpeed / 4 : movingSpeed / 4;
                 } else if (Math.abs(posY.get() - tempLen) <= 15) {
-                    y = Global.elevatorUpward1 ? -movingSpeed / 8 : movingSpeed / 8;
+                    y = Global.direct1.equals(directionType.UP) ? -movingSpeed / 8 : movingSpeed / 8;
                 } else {
-                    y = Global.elevatorUpward1 ? -movingSpeed : movingSpeed;
+                    y = Global.direct1.equals(directionType.UP) ? -movingSpeed : movingSpeed;
                 }
                 posY.set(posY.get() + y);
                 System.out.println(posY.getValue());
             } else {
                 timeline.stop();
-                Global.isMoving1 = false;
                 Global.controlCabin1.enableButton(getFloorPosition(tempLen));
-                //checkEndOfPulse();
-                if (!Global.gotoElevator1.isEmpty()) {
-                    FloorStatus temp = null;
-                    for (FloorStatus item : Global.gotoElevator1) {
-                        if (item.getMemory()) {
-                            temp = new FloorStatus();
-                            temp.setFloor(item.getFloor());
-                            temp.setMemory(item.getMemory());
-                            temp.setUpward(item.getUpward());
-                            Global.gotoElevator1.remove(item);
-                            break;
-                        }
+                if (Global.direct1.equals(directionType.UP)) {
+                    if (checkListUp(getFloorPosition(tempLen))) {
+                        Global.direct1 = directionType.STANDBY;
+                        moveElevator1(searchNearUp(getFloorPosition(tempLen)));
+                    } else if (checkListDown(getFloorPosition(tempLen))) {
+                        Global.direct1 = directionType.STANDBY;
+                        moveElevator1(searchNearDown(getFloorPosition(tempLen)));
+                    }else{
+                        Global.direct1 = directionType.STANDBY;
                     }
-                    if (temp != null) {
-                        moveElevator1(temp.getFloor());
-                    } else {
-                        temp = Global.gotoElevator1.get(0);
-                        moveElevator1(temp.getFloor());
-                        Global.gotoElevator1.remove(0);
+                } else if (Global.direct1.equals(directionType.DOWN)) {
+                    if (checkListDown(getFloorPosition(tempLen))) {
+                        Global.direct1 = directionType.STANDBY;
+                        moveElevator1(searchNearDown(getFloorPosition(tempLen)));
+                    }else if(checkListUp(getFloorPosition(tempLen))){
+                        Global.direct1 = directionType.STANDBY;
+                        moveElevator1(searchNearUp(getFloorPosition(tempLen)));
+                    }else{
+                        Global.direct1 = directionType.STANDBY;
                     }
+                } else {
+                    Global.direct1 = directionType.STANDBY;
                 }
             }
 
         }
     };
+
+    public boolean checkListUp(int floor) {
+        boolean check = false;
+        for (Integer tmp : Global.listUp1) {
+            if (tmp > floor) {
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
+
+    public boolean checkListDown(int floor) {
+        boolean check = false;
+        for (Integer tmp : Global.listDown1) {
+            if (tmp < floor) {
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
+
+    public int searchNearUp(int floor) {
+        Integer near = Global.listUp1.get(0);
+        for (Integer tmp : Global.listUp1) {
+            if (near < tmp) {
+                near = tmp;
+            }
+        }
+        for (Integer tmp : Global.listUp1) {
+            if (tmp > floor && tmp < near) {
+                near = tmp;
+            }
+        }
+        Global.listUp1.remove(near);
+        return near;
+    }
+
+    public int searchNearDown(int floor) {
+        Integer near = Global.listDown1.get(0);
+        for (Integer tmp : Global.listDown1) {
+            if (near > tmp) {
+                near = tmp;
+            }
+        }
+        for (Integer tmp : Global.listDown1) {
+            if (tmp < floor && tmp > near) {
+                near = tmp;
+            }
+        }
+        Global.listDown1.remove(near);
+        return near;
+    }
 
     @FXML
     public void disableOutsideButton(boolean up, int floor) {
@@ -467,5 +511,34 @@ public class PrototypeStageController implements Initializable {
     public void activeElevator2() {
         btnElev2.setDisable(false);
     }
+//
+//    
+//    public void externalMovingAction(int to) {
+//        if (Global.elevatorUpward1) {
+//            if (posY.get() > getFloorPosition(to) && getFloorPosition(to) > tempLen) {
+//                if (memoryFloor(Global.gotoElevator1) == 0) {
+//                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen),true,true));
+//                    tempLen = getFloorPosition(to);
+//                } else {
+//                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), true));
+//                    tempLen = getFloorPosition(to);
+//                }
+//            } else {
+//                Global.gotoElevator1.add(new FloorStatus(to, true));
+//            }
+//        } else {
+//            if (posY.get() < getFloorPosition(to) && getFloorPosition(to) < tempLen) {
+//                if (memoryFloor(Global.gotoElevator1) == 0) {
+//                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen),false,true));
+//                    tempLen = getFloorPosition(to);
+//                } else {
+//                    Global.gotoElevator1.add(new FloorStatus(getFloorPosition(tempLen), false));
+//                    tempLen = getFloorPosition(to);
+//                }
+//            } else {
+//                Global.gotoElevator1.add(new FloorStatus(to, false));
+//            }
+//        }
+//        //Global.gotoElevator1.add(new FloorStatus(to, true));
 
 }
