@@ -255,7 +255,7 @@ public class PrototypeStageController implements Initializable {
     }
 
     public void moveElevator1(int to) {
-        if (to == getFloorPosition(tempLen)) {
+        if (to == getFloorPosition(tempLen) || to == getFloorPosition(posY.get())) {
             Global.controlCabin1.enableButton(to);
         } else {
             if (Global.direct1.equals(directionType.UP)) {
