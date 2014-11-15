@@ -14,8 +14,6 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TimelineBuilder;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,6 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import models.ButtonOutside;
 import models.FloorStatus;
 
 /**
@@ -44,10 +43,12 @@ public class PrototypeStageController implements Initializable {
 
     private Double movingSpeed = 1.0;// elevator 
     private double tempLen = 0;
-    private Timeline elevatorTimeline;
-    private Timeline doorTimeline;
+    public Timeline elevatorTimeline;
+    public Timeline doorTimeline;
+    public Timeline waitingTimeline;
+    private int timewaiting = 0;
     private boolean doorwait = false;
-    
+
     /**
      * Initializes the controller class.
      */
@@ -189,6 +190,13 @@ public class PrototypeStageController implements Initializable {
         doorTimeline.playFromStart();
     }
 
+    public void waitDoor(){
+        waitingTimeline = new Timeline();
+        waitingTimeline = TimelineBuilder.create()
+                .keyFrames(new KeyFrame(new Duration(100.0), waitingEvent))
+                .cycleCount(Timeline.INDEFINITE).build();
+        waitingTimeline.playFromStart();
+    }
     @FXML
     public void setValue() {
 
@@ -242,7 +250,17 @@ public class PrototypeStageController implements Initializable {
         return check;
     }
 
-    public void moveElevatorInside1(int to) {
+    public void moveElevatorOutside1(int tFloor, boolean tUp) {
+        disableOutsideButton(tUp, tFloor);
+        if (tFloor == 1 && tFloor == getFloorPosition(tempLen)) {
+            enableOutsideButton(true, tFloor);
+        } else if (tFloor == 7 && tFloor == getFloorPosition(tempLen)) {
+            enableOutsideButton(false, tFloor);
+        }
+    }
+
+
+public void moveElevatorInside1(int to) {
         if (to == getFloorPosition(tempLen) || to == getFloorPosition(elevator1.getLayoutY())) {
             Global.controlCabin1.enableButton(to);
         } else {
@@ -288,10 +306,26 @@ public class PrototypeStageController implements Initializable {
                 leftDoor.setFitWidth(leftDoor.getFitWidth() + 1);
                 rightDoor.setFitWidth(rightDoor.getFitWidth() + 1);
                 rightDoor.setX(rightDoor.getX() - 1);
-            } else {
-                doorwait = false;
+            } else {                
                 doorTimeline.stop();
             }
+        }
+    };
+    
+    private final EventHandler<ActionEvent> waitingEvent = new EventHandler<ActionEvent>() {
+
+        @Override
+        public void handle(ActionEvent event) {
+            if(timewaiting!= 20)
+                timewaiting++;
+            else
+            {
+                doorwait = false;
+                timewaiting = 0;
+                waitingTimeline.stop();
+                closeDoor();
+            }
+            
         }
     };
     private final EventHandler<ActionEvent> openDoorEvent = new EventHandler<ActionEvent>() {
@@ -305,7 +339,7 @@ public class PrototypeStageController implements Initializable {
             } else {
                 //doorwait = false;
                 doorTimeline.stop();
-                closeDoor();
+                waitDoor();
             }
         }
     };
@@ -322,17 +356,18 @@ public class PrototypeStageController implements Initializable {
                 } else {
                     y = Global.direct1.equals(directionType.UP) ? -movingSpeed : movingSpeed;
                 }
-                if(!doorwait)
+                if (!doorwait) {
                     elevator1.setLayoutY(elevator1.getLayoutY() + y);
+                }
                 System.out.println(elevator1.getLayoutY());
             } else {
                 elevatorTimeline.stop();
-                
+
                 enableOutsideButton(Global.direct1 == directionType.UP ? false : true, getFloorPosition(tempLen));
                 doorwait = true;
                 openDoor();
-                
-               // closeDoor();
+
+                // closeDoor();
                 if (Global.controlCabin1 != null) {
                     Global.controlCabin1.enableButton(getFloorPosition(tempLen));
                 }
@@ -516,69 +551,81 @@ public class PrototypeStageController implements Initializable {
 
     @FXML
     void actionUp1() {
+        moveElevatorOutside1(1, true);
     }
 
     @FXML
     void actionUp2() {
+        moveElevatorOutside1(2, true);
     }
 
     @FXML
     void actionUp3() {
+        moveElevatorOutside1(3, true);
     }
 
     @FXML
     void actionUp4() {
+        moveElevatorOutside1(4, true);
     }
 
     @FXML
     void actionUp5() {
+        moveElevatorOutside1(5, true);
     }
 
     @FXML
     void actionUp6() {
+        moveElevatorOutside1(6, true);
     }
 
     @FXML
     void actionDown2() {
+        moveElevatorOutside1(2, false);
     }
 
     @FXML
     void actionDown3() {
+        moveElevatorOutside1(3, false);
     }
 
     @FXML
     void actionDown4() {
+        moveElevatorOutside1(4, false);
     }
 
     @FXML
     void actionDown5() {
+        moveElevatorOutside1(5, false);
     }
 
     @FXML
     void actionDown6() {
+        moveElevatorOutside1(6, false);
     }
 
     @FXML
     void actionDown7() {
+        moveElevatorOutside1(7, false);
     }
 
     @FXML
-    public void deactiveElevator1() {
+        public void deactiveElevator1() {
         btnElev1.setDisable(true);
     }
 
     @FXML
-    public void deactiveElevator2() {
+        public void deactiveElevator2() {
         btnElev2.setDisable(true);
     }
 
     @FXML
-    public void activeElevator1() {
+        public void activeElevator1() {
         btnElev1.setDisable(false);
     }
 
     @FXML
-    public void activeElevator2() {
+        public void activeElevator2() {
         btnElev2.setDisable(false);
     }
 }

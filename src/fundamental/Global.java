@@ -7,6 +7,7 @@ package fundamental;
 
 import static fundamental.Global.directionType.STANDBY;
 import java.util.ArrayList;
+import models.ButtonOutside;
 import models.FloorStatus;
 import views.ControlCabinController;
 import views.PrototypeStageController;
@@ -35,12 +36,9 @@ public class Global {
     public static ArrayList<Integer> listUp1 = new ArrayList<>();
     public static ArrayList<Integer> listDown1 = new ArrayList<>();
     public static ArrayList<FloorStatus> listUp2 = new ArrayList<>();
-    public static ArrayList<FloorStatus> gotoElevator2 = new ArrayList<>();;
-    
+    public static ArrayList<FloorStatus> gotoElevator2 = new ArrayList<>();
+    public static ArrayList<ButtonOutside> buttonOutside = new ArrayList<>();
     public static PrototypeStageController prototypeStage;
     public static ControlCabinController controlCabin1;
     public static ControlCabinController controlCabin2;
-
-    
-    
 }

@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javax.print.attribute.standard.PrinterStateReason;
 
 /**
  * FXML Controller class
@@ -146,6 +147,25 @@ public class ControlCabinController implements Initializable {
         }
     }
 
+    @FXML private void actionHoldDoor(){
+        if(Global.direct1.equals(Global.directionType.STANDBY)){
+            if(Global.prototypeStage.doorTimeline!=null)
+                Global.prototypeStage.doorTimeline.stop();
+            if(Global.prototypeStage.waitingTimeline!=null)
+                Global.prototypeStage.waitingTimeline.stop();
+            Global.prototypeStage.openDoor();
+        }
+    }
+    
+    @FXML private void actionCloseDoor(){
+         if(Global.direct1.equals(Global.directionType.STANDBY)){
+            if(Global.prototypeStage.doorTimeline!=null)
+                Global.prototypeStage.doorTimeline.stop();
+            if(Global.prototypeStage.waitingTimeline!=null)
+                Global.prototypeStage.waitingTimeline.stop();
+             Global.prototypeStage.closeDoor();
+         }
+    }
     /**
      * Initializes the controller class.
      */
