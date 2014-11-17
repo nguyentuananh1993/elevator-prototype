@@ -46,8 +46,8 @@ public class PrototypeStageController implements Initializable {
     public Timeline elevatorTimeline;
     public Timeline doorTimeline;
     public Timeline waitingTimeline;
-    private int timewaiting = 0;
-    private boolean doorwait = false;
+    private int waitingTime = 0;
+    private boolean doorWait = false;
 
     /**
      * Initializes the controller class.
@@ -308,6 +308,7 @@ public void moveElevatorInside1(int to) {
                 rightDoor.setX(rightDoor.getX() - 1);
             } else {                
                 doorTimeline.stop();
+                doorWait = false;
             }
         }
     };
@@ -316,12 +317,12 @@ public void moveElevatorInside1(int to) {
 
         @Override
         public void handle(ActionEvent event) {
-            if(timewaiting!= 20)
-                timewaiting++;
+            if(waitingTime!= 20)
+                waitingTime++;
             else
             {
-                doorwait = false;
-                timewaiting = 0;
+//                doorWait = false;
+                waitingTime = 0;
                 waitingTimeline.stop();
                 closeDoor();
             }
@@ -337,7 +338,7 @@ public void moveElevatorInside1(int to) {
                 rightDoor.setFitWidth(rightDoor.getFitWidth() - 1);
                 rightDoor.setX(rightDoor.getX() + 1);
             } else {
-                //doorwait = false;
+//                doorWait = false;
                 doorTimeline.stop();
                 waitDoor();
             }
@@ -356,7 +357,7 @@ public void moveElevatorInside1(int to) {
                 } else {
                     y = Global.direct1.equals(directionType.UP) ? -movingSpeed : movingSpeed;
                 }
-                if (!doorwait) {
+                if (!doorWait) {
                     elevator1.setLayoutY(elevator1.getLayoutY() + y);
                 }
                 System.out.println(elevator1.getLayoutY());
@@ -364,7 +365,7 @@ public void moveElevatorInside1(int to) {
                 elevatorTimeline.stop();
 
                 enableOutsideButton(Global.direct1 == directionType.UP ? false : true, getFloorPosition(tempLen));
-                doorwait = true;
+                doorWait = true;
                 openDoor();
 
                 // closeDoor();
