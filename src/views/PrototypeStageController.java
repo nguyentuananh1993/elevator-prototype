@@ -31,7 +31,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import models.ButtonOutside;
 import models.FloorStatus;
 
 /**
@@ -48,7 +47,6 @@ public class PrototypeStageController implements Initializable {
     public Timeline waitingTimeline;
     private int waitingTime = 0;
     private boolean doorWait = false;
-
     /**
      * Initializes the controller class.
      */
@@ -190,18 +188,40 @@ public class PrototypeStageController implements Initializable {
         doorTimeline.playFromStart();
     }
 
-    public void waitDoor(){
-        waitingTimeline = new Timeline();
-        waitingTimeline = TimelineBuilder.create()
+    public void waitDoor() {
+        doorTimeline = new Timeline();
+        doorTimeline = TimelineBuilder.create()
                 .keyFrames(new KeyFrame(new Duration(100.0), waitingEvent))
                 .cycleCount(Timeline.INDEFINITE).build();
-        waitingTimeline.playFromStart();
+        doorTimeline.playFromStart();
     }
+
     @FXML
     public void setValue() {
 
     }
-
+    public boolean checkFloorLabel(double len){
+        if(len == 500.0 || len == 420.0 ||len == 340.0 ||len == 260.0 ||len == 180.0 ||len == 100.0 ||len == 20.0)
+            return true;
+        else return false;
+    }
+    public int getFloorLabel(double len){
+        if (len == 500.0) {
+            return 1;
+        } else if (len == 420.0) {
+            return 2;
+        } else if (len == 340.0) {
+            return 3;
+        } else if (len == 260.0) {
+            return 4;
+        } else if (len == 180.0) {
+            return 5;
+        } else if (len == 100.0) {
+            return 6;
+        } else {
+            return 7;
+        }
+    }
     public int getFloorPosition(double len) {
         if (len >= 500.0) {
             return 1;
@@ -251,16 +271,19 @@ public class PrototypeStageController implements Initializable {
     }
 
     public void moveElevatorOutside1(int tFloor, boolean tUp) {
-        disableOutsideButton(tUp, tFloor);
-        if (tFloor == 1 && tFloor == getFloorPosition(tempLen)) {
-            enableOutsideButton(true, tFloor);
-        } else if (tFloor == 7 && tFloor == getFloorPosition(tempLen)) {
-            enableOutsideButton(false, tFloor);
+        if (tFloor != getFloorPosition(tempLen)) {
+            if (tUp) {
+                Global.listUp1.add(tFloor);
+            } else {
+                Global.listDown1.add(tFloor);
+            }
+            disableOutsideButton(tUp, tFloor);
+
         }
+
     }
 
-
-public void moveElevatorInside1(int to) {
+    public void moveElevatorInside1(int to) {
         if (to == getFloorPosition(tempLen) || to == getFloorPosition(elevator1.getLayoutY())) {
             Global.controlCabin1.enableButton(to);
         } else {
@@ -306,27 +329,26 @@ public void moveElevatorInside1(int to) {
                 leftDoor.setFitWidth(leftDoor.getFitWidth() + 1);
                 rightDoor.setFitWidth(rightDoor.getFitWidth() + 1);
                 rightDoor.setX(rightDoor.getX() - 1);
-            } else {                
+            } else {
                 doorTimeline.stop();
                 doorWait = false;
             }
         }
     };
-    
+
     private final EventHandler<ActionEvent> waitingEvent = new EventHandler<ActionEvent>() {
 
         @Override
         public void handle(ActionEvent event) {
-            if(waitingTime!= 20)
+            if (waitingTime != 20) {
                 waitingTime++;
-            else
-            {
+            } else {
 //                doorWait = false;
                 waitingTime = 0;
-                waitingTimeline.stop();
+                doorTimeline.stop();
                 closeDoor();
             }
-            
+
         }
     };
     private final EventHandler<ActionEvent> openDoorEvent = new EventHandler<ActionEvent>() {
@@ -357,15 +379,24 @@ public void moveElevatorInside1(int to) {
                 } else {
                     y = Global.direct1.equals(directionType.UP) ? -movingSpeed : movingSpeed;
                 }
+                if(checkFloorLabel(elevator1.getLayoutY()))
+                    Global.controlCabin1.floorLabel.setText(String.valueOf(getFloorLabel(elevator1.getLayoutY())));
                 if (!doorWait) {
+                    
                     elevator1.setLayoutY(elevator1.getLayoutY() + y);
                 }
                 System.out.println(elevator1.getLayoutY());
             } else {
+                if(checkFloorLabel(elevator1.getLayoutY()))
+                    Global.controlCabin1.floorLabel.setText(String.valueOf(getFloorLabel(elevator1.getLayoutY())));
                 elevatorTimeline.stop();
 
                 enableOutsideButton(Global.direct1 == directionType.UP ? false : true, getFloorPosition(tempLen));
                 doorWait = true;
+                if(getButtonOusideStatus(getFloorPosition(tempLen), true)){
+                }
+                if(getButtonOusideStatus(getFloorPosition(tempLen), false)){
+                }
                 openDoor();
 
                 // closeDoor();
@@ -502,6 +533,45 @@ public void moveElevatorInside1(int to) {
 
     }
 
+    public boolean getButtonOusideStatus(int tFloor, boolean tUp) {
+        if (tUp) {
+            switch (tFloor) {
+                case 1:
+                    return btnUp1.isDisabled();
+                case 2:
+                    return btnUp2.isDisabled();
+                case 3:
+                    return btnUp3.isDisabled();
+                case 4:
+                    return btnUp4.isDisabled();
+                case 5:
+                    return btnUp5.isDisabled();
+                case 6:
+                    return btnUp6.isDisabled();
+                default:
+                    return true;
+            }
+        } else {
+            switch (tFloor) {
+                case 2:
+                    return btnDown2.isDisabled();
+
+                case 3:
+                    return btnDown2.isDisabled();
+                case 4:
+                    return btnDown2.isDisabled();
+                case 5:
+                    return btnDown2.isDisabled();
+                case 6:
+                    return btnDown2.isDisabled();
+                case 7:
+                    return btnDown2.isDisabled();
+                default:
+                    return true;
+            }
+        }
+    }
+
     public void enableOutsideButton(boolean up, int floor) {
         if (!up) {
             switch (floor) {
@@ -611,22 +681,22 @@ public void moveElevatorInside1(int to) {
     }
 
     @FXML
-        public void deactiveElevator1() {
+    public void deactiveElevator1() {
         btnElev1.setDisable(true);
     }
 
     @FXML
-        public void deactiveElevator2() {
+    public void deactiveElevator2() {
         btnElev2.setDisable(true);
     }
 
     @FXML
-        public void activeElevator1() {
+    public void activeElevator1() {
         btnElev1.setDisable(false);
     }
 
     @FXML
-        public void activeElevator2() {
+    public void activeElevator2() {
         btnElev2.setDisable(false);
     }
 }

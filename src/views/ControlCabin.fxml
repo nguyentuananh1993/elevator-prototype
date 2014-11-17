@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -46,5 +47,10 @@
             <Image url="@../css/picture/Octocat.png" />
          </image>
       </ImageView>
+      <Label fx:id="floorLabel" layoutX="54.0" layoutY="23.0">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
