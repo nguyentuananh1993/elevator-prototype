@@ -200,12 +200,16 @@ public class PrototypeStageController implements Initializable {
     public void setValue() {
 
     }
-    public boolean checkFloorLabel(double len){
-        if(len == 500.0 || len == 420.0 ||len == 340.0 ||len == 260.0 ||len == 180.0 ||len == 100.0 ||len == 20.0)
+
+    public boolean checkFloorLabel(double len) {
+        if (len == 500.0 || len == 420.0 || len == 340.0 || len == 260.0 || len == 180.0 || len == 100.0 || len == 20.0) {
             return true;
-        else return false;
+        } else {
+            return false;
+        }
     }
-    public int getFloorLabel(double len){
+
+    public int getFloorLabel(double len) {
         if (len == 500.0) {
             return 1;
         } else if (len == 420.0) {
@@ -222,6 +226,7 @@ public class PrototypeStageController implements Initializable {
             return 7;
         }
     }
+
     public int getFloorPosition(double len) {
         if (len >= 500.0) {
             return 1;
@@ -272,11 +277,8 @@ public class PrototypeStageController implements Initializable {
 
     public void moveElevatorOutside1(int tFloor, boolean tUp) {
         if (tFloor != getFloorPosition(tempLen)) {
-            if (tUp) {
-                Global.listUp1.add(tFloor);
-            } else {
-                Global.listDown1.add(tFloor);
-            }
+
+            moveElevatorInside1(tFloor);
             disableOutsideButton(tUp, tFloor);
 
         }
@@ -379,23 +381,24 @@ public class PrototypeStageController implements Initializable {
                 } else {
                     y = Global.direct1.equals(directionType.UP) ? -movingSpeed : movingSpeed;
                 }
-                if(checkFloorLabel(elevator1.getLayoutY()))
+                if (checkFloorLabel(elevator1.getLayoutY()) && Global.controlCabin1 != null) {
                     Global.controlCabin1.floorLabel.setText(String.valueOf(getFloorLabel(elevator1.getLayoutY())));
+                }
                 if (!doorWait) {
-                    
                     elevator1.setLayoutY(elevator1.getLayoutY() + y);
                 }
                 System.out.println(elevator1.getLayoutY());
             } else {
-                if(checkFloorLabel(elevator1.getLayoutY()))
-                    Global.controlCabin1.floorLabel.setText(String.valueOf(getFloorLabel(elevator1.getLayoutY())));
                 elevatorTimeline.stop();
-
+                if (checkFloorLabel(elevator1.getLayoutY()) && Global.controlCabin1 != null) {
+                    Global.controlCabin1.floorLabel.setText(String.valueOf(getFloorLabel(elevator1.getLayoutY())));
+                }
+                checkEnableButton();
                 enableOutsideButton(Global.direct1 == directionType.UP ? false : true, getFloorPosition(tempLen));
                 doorWait = true;
-                if(getButtonOusideStatus(getFloorPosition(tempLen), true)){
+                if (getButtonOusideStatus(getFloorPosition(tempLen), true)) {
                 }
-                if(getButtonOusideStatus(getFloorPosition(tempLen), false)){
+                if (getButtonOusideStatus(getFloorPosition(tempLen), false)) {
                 }
                 openDoor();
 
@@ -430,6 +433,15 @@ public class PrototypeStageController implements Initializable {
 
         }
     };
+
+    public void checkEnableButton() {
+        if (Global.direct1.equals(directionType.UP)) {
+            enableOutsideButton(true, getFloorPosition(tempLen));
+
+        } else if (Global.direct1.equals(directionType.DOWN)) {
+            enableOutsideButton(false, getFloorPosition(tempLen));
+        }
+    }
 
     public boolean checkListUp(int floor) {
         boolean check = false;
